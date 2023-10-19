@@ -8,5 +8,7 @@
         public bool IsBooked { get; set; }
         public string? ParentName { get; set; }
         public string? Email { get; set; }
+        public string MobileNumber { get; set; }
+
     }
 }

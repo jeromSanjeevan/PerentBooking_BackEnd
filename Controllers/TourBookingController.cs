@@ -20,19 +20,38 @@ namespace ParentBookingAPI.Controllers
             _tourBookingrepository = tourBookingRespository;
         }
 
-        [Authorize(AuthenticationSchemes = "Token1Scheme", Roles = "Admin")]
-
-        //[Authorize(AuthenticationSchemes = "Token1Scheme")]
-        [HttpGet("GetAllTourBookings")]
-        public async Task<IActionResult> GetAllBookedSlots(int id)
+   
+        [HttpGet("GetAllTourBookings_ParentView")]
+        public async Task<IActionResult> GetAllBookedSlots_ParentView(int id)
         {
             try
             {
-                var tourBookingResponsses = await _tourBookingrepository.GetAllTourBookingsAsync(id);
+                var tourBookingResponsses = await _tourBookingrepository.GetAllTourBookings_ParentAsync(id);
 
                 if (tourBookingResponsses == null || tourBookingResponsses.Count == 0)
                 {
                     return NotFound();
+                }
+
+                return Ok(tourBookingResponsses);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [Authorize(AuthenticationSchemes = "Token1Scheme", Roles = "Super_Admin, Admin, Manager")]
+        [HttpGet("GetAllTourBookings_AdminView")]
+        public async Task<IActionResult> GetAllBookedSlots_AdmintView(int id)
+        {
+            try
+            {
+                var tourBookingResponsses = await _tourBookingrepository.GetAllTourBookings_AdminAsync(id);
+
+                if (tourBookingResponsses == null || tourBookingResponsses.Count == 0)
+                {
+                    return NotFound();                  
                 }
 
                 return Ok(tourBookingResponsses);

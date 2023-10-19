@@ -17,24 +17,60 @@ namespace ParentBookingAPI.Repository
             _dbHelper = dbHelper;
         }
 
-        public async Task<List<TourBookingResponssDto>> GetAllTourBookingsAsync(int id)
+        public async Task<List<TourBookingResponssDto_Parent>> GetAllTourBookings_ParentAsync(int id)
         {
             SqlParameter[] parameters = new SqlParameter[]
             {
             new SqlParameter("@TourID", SqlDbType.Int) { Value = id }
             };
 
-            List<TourBookingResponssDto> tourBookings = await _dbHelper.ExecuteStoredProcedureAsync(
+            List<TourBookingResponssDto_Parent> tourBookings = await _dbHelper.ExecuteStoredProcedureAsync(
                 "SP_GetAllTourBookings",
                 parameters,
-                MapTourBookingResponseDto);
+                MapTourBookingResponseDto_Parent);
 
             return tourBookings;
         }
-
-        private TourBookingResponssDto MapTourBookingResponseDto(SqlDataReader reader)
+        private TourBookingResponssDto_Parent MapTourBookingResponseDto_Parent(SqlDataReader reader)
         {
-            TourBookingResponssDto tourBooking = new TourBookingResponssDto();
+            TourBookingResponssDto_Parent tourBooking = new TourBookingResponssDto_Parent();
+
+            if (!reader.IsDBNull(reader.GetOrdinal("TourID")))
+            {
+                tourBooking.TourID = reader.GetInt32(reader.GetOrdinal("TourID"));
+            }
+
+            if (!reader.IsDBNull(reader.GetOrdinal("SlotNumber")))
+            {
+                tourBooking.SlotNumber = reader.GetInt32(reader.GetOrdinal("SlotNumber"));
+            }
+
+            if (!reader.IsDBNull(reader.GetOrdinal("IsBooked")))
+            {
+                tourBooking.IsBooked = reader.GetBoolean(reader.GetOrdinal("IsBooked"));
+            }
+
+            return tourBooking;
+        }
+
+        public async Task<List<TourBookingResponssDto_Admin>> GetAllTourBookings_AdminAsync(int id)
+        {
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+            new SqlParameter("@TourID", SqlDbType.Int) { Value = id }
+            };
+
+            List<TourBookingResponssDto_Admin> tourBookings = await _dbHelper.ExecuteStoredProcedureAsync(
+                "SP_GetAllTourBookings",
+                parameters,
+                MapTourBookingResponseDto_Admin);
+
+            return tourBookings;
+        }      
+
+        private TourBookingResponssDto_Admin MapTourBookingResponseDto_Admin(SqlDataReader reader)
+        {
+            TourBookingResponssDto_Admin tourBooking = new TourBookingResponssDto_Admin();
 
             if (!reader.IsDBNull(reader.GetOrdinal("TourID")))
             {
@@ -59,6 +95,12 @@ namespace ParentBookingAPI.Repository
             if (!reader.IsDBNull(reader.GetOrdinal("Email")))
             {
                 tourBooking.Email = reader.GetString(reader.GetOrdinal("Email"));
+            }
+
+
+            if (!reader.IsDBNull(reader.GetOrdinal("MobileNumber")))
+            {
+                tourBooking.MobileNumber = reader.GetString(reader.GetOrdinal("MobileNumber"));
             }
 
             return tourBooking;
@@ -128,7 +170,8 @@ namespace ParentBookingAPI.Repository
                  new SqlParameter("@TourID", tourBooking.TourID),
                  new SqlParameter("@SlotNumber", tourBooking.SlotNumber),
                  new SqlParameter("@ParentName", tourBooking.ParentName),
-                 new SqlParameter("@Email", tourBooking.Email)
+                 new SqlParameter("@Email", tourBooking.Email),
+                   new SqlParameter("@MobileNumber", tourBooking.MobileNumber)
             };
 
             int rowsAffected = await _dbHelper.ExecuteUpdateStoredProcedureAsync("SP_UpdateTourBookinSlot", parameters);

@@ -159,8 +159,8 @@ namespace ParentBookingAPI.Repository
 
             var token = new JwtSecurityToken(
                 claims: claims,
-                //expires: DateTime.Now.AddDays(1),
-              expires : DateTime.Now.AddSeconds(30),
+                expires: DateTime.Now.AddDays(1),
+              //expires : DateTime.Now.AddSeconds(30),
                 signingCredentials: cred
                 );
 

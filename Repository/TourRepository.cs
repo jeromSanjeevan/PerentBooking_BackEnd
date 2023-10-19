@@ -17,7 +17,6 @@ namespace ParentBookingAPI.Repository
             _dbHelper = dbHelper;
         }
 
-
         public async Task<List<TourResposeDto>> GetAllToursAsync()
         {
             SqlParameter[] parameters = null; // If you don't need any parameters
@@ -29,8 +28,6 @@ namespace ParentBookingAPI.Repository
 
             return tours;
         }
-
-
 
         public async Task<TourResposeDto> GetTourByIdAsync(int id)
         {

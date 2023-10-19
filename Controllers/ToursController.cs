@@ -16,9 +16,30 @@ namespace ParentBookingAPI.Controllers
 
             _tourRepository = tourRepository;
         }
-        [Authorize(AuthenticationSchemes = "Token1Scheme", Roles = "Admin")]
-        [HttpGet("GetAllTours")]
-        public async Task<IActionResult> GetAllBookedSlots()
+
+        [HttpGet("GetAllTours_ParentView")]
+        public async Task<IActionResult> GetAllBookedSlots_Parent()
+        {
+            try
+            {
+                var tourResponse = await _tourRepository.GetAllToursAsync();
+                if (tourResponse == null || tourResponse.Count == 0)
+                {
+                    return NotFound();
+                }
+
+                return Ok(tourResponse);
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [Authorize(AuthenticationSchemes = "Token1Scheme", Roles = "Super_Admin, Admin, Manager")]
+        [HttpGet("GetAllTours_AdminView")]
+        public async Task<IActionResult> GetAllBookedSlots_Admin()
         {
             try
             {
@@ -37,7 +58,8 @@ namespace ParentBookingAPI.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-        //[Authorize(AuthenticationSchemes = "Token1Scheme", Roles = "Admin")]
+
+        //This is for Heading Purpose in UI
         [HttpGet("GetTourById/{id}")]
         public async Task<IActionResult> GetTourById(int id)
         {
@@ -57,7 +79,5 @@ namespace ParentBookingAPI.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-
-
     }
 }
