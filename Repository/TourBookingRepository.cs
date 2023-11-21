@@ -50,6 +50,11 @@ namespace ParentBookingAPI.Repository
                 tourBooking.IsBooked = reader.GetBoolean(reader.GetOrdinal("IsBooked"));
             }
 
+            if (!reader.IsDBNull(reader.GetOrdinal("IsLocked")))
+            {
+                tourBooking.IsLoked = reader.GetBoolean(reader.GetOrdinal("IsLocked"));
+            }
+
             return tourBooking;
         }
 

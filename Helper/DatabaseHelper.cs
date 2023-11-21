@@ -50,6 +50,34 @@ namespace ParentBookingAPI.Helper
             return result;
         }
 
+        public async Task<T> ExecuteStoredProcedureSingleAsync<T>(string storedProcedureName, SqlParameter[] parameters, Func<SqlDataReader, T> map)
+        {
+            using SqlConnection connection = new SqlConnection(_connectionString);
+            using SqlCommand cmd = new SqlCommand(storedProcedureName, connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            if (parameters != null)
+            {
+                cmd.Parameters.AddRange(parameters);
+            }
+
+            await connection.OpenAsync();
+            SqlDataReader reader = await cmd.ExecuteReaderAsync();
+
+            T result = default(T); // Default value for T, can be null for reference types
+
+            if (await reader.ReadAsync())
+            {
+                result = map(reader);
+            }
+
+            await reader.CloseAsync();
+            await connection.CloseAsync();
+
+            return result;
+        }
+
+
         public async Task<int> ExecuteUpdateStoredProcedureAsync(string storedProcedureName, SqlParameter[] parameters)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))

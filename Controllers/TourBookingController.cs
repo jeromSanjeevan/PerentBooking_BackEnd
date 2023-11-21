@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using ParentBookingAPI.Helper;
 using ParentBookingAPI.Model;
@@ -9,6 +10,7 @@ using System.Data;
 
 namespace ParentBookingAPI.Controllers
 {
+  
     [Route("api/TourBooking")]
     [ApiController]
     public class TourBookingController : Controller
@@ -77,7 +79,7 @@ namespace ParentBookingAPI.Controllers
         //}
 
 
-        [HttpPut("update/{tourID}/{slotNumber}")]
+        [HttpPost("update/{tourID}/{slotNumber}")]
         public async Task<IActionResult> UpdateTourBooking(int tourID, int slotNumber, TourBookings tourBooking)
         {
             try

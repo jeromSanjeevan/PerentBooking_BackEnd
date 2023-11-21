@@ -11,6 +11,7 @@ using Swashbuckle.AspNetCore.Filters;
 using ParentBookingAPI.Service.UserService;
 using ParentBookingAPI.Repository.Interfaces;
 using ParentBookingAPI.Repository;
+using ParentBookingAPI.HostService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,9 +23,13 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITourBookingRespository, TourBookingRepository>();
 builder.Services.AddScoped<ITourRepository, TourRepository>();
+builder.Services.AddScoped<ILockSlot, LockSlot>();
 builder.Services.AddScoped<IEmailRepository, EmailRepository>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddHostedService<DatabaseUpdateService>(); // Add the background service here
+
+
 
 builder.Services.AddSingleton<DatabaseHelper>((provider) =>
 {
@@ -106,8 +111,9 @@ builder.Services.AddCors(options =>
     options.AddPolicy("LocalAngularAppPolicy",
         builder =>
         {
-            builder.WithOrigins("https://localhost:4200")
-                   .AllowAnyMethod()
+            builder.WithOrigins("http://localhost:4200", "http://20.188.118.101:4241", "http://parentbooking.ecsolutionsltd.co.uk", "https://www.parentbooking.ecsolutionsltd.co.uk", "http://tour.ecsolutionsltd.co.uk:4241", "https://tour.ecsolutionsltd.co.uk:4241")
+            //builder.WithOrigins("http://20.188.118.101:4241")
+                  .AllowAnyMethod()
                    .AllowAnyHeader()
              .AllowCredentials(); // Allow credentials (cookies, etc.)
         });
@@ -124,6 +130,7 @@ if (app.Environment.IsDevelopment())
 
 //CORS
 //app.UseCors("FrontEnd");
+
 
 app.UseCors("LocalAngularAppPolicy");
 

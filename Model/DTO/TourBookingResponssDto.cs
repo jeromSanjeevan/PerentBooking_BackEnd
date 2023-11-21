@@ -6,7 +6,9 @@
         public int TourID { get; set; }
         public int SlotNumber { get; set; }
         public bool IsBooked { get; set; }
- 
+        public bool IsLoked { get; set; }
+
+
     }
 
     public class TourBookingResponssDto_Admin
